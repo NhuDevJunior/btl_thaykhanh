@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.haerul.popularnews.MainActivity"
+    >
+
+    <item android:title="Search"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_search"
+        app:showAsAction="always"
+        android:id="@+id/action_search"
+        android:theme="@android:style/Theme.Holo.Light.DarkActionBar"
+        app:actionViewClass="android.widget.SearchView"
+
+        />
+    <item android:title="Favorite List"
+        android:id="@+id/action_favorite"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        />
+</menu>
