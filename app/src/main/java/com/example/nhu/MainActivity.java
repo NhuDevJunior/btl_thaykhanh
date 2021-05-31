@@ -1,5 +1,6 @@
 package com.example.nhu;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.view.MenuItemCompat;
@@ -206,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         inflater.inflate(R.menu.menu_main,menu);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         MenuItem searchMenuItem = menu.findItem(R.id.action_search);
-        MenuItem favoriteMenuItem = menu.findItem(R.id.action_favorite);
+        MenuItem favoriteMenuItem = menu.findItem(R.id.action_login);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setQueryHint("Search Latest News");
@@ -229,7 +230,18 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         searchMenuItem.getIcon().setVisible(false,false);
         return true;
     }
-    private void showErrorMessage(int imageView,String title,String message)
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.action_login)
+        {
+            startActivity(new Intent(MainActivity.this,LoginFacbookActivity.class));
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showErrorMessage(int imageView, String title, String message)
     {
         if(errorLayout.getVisibility()==View.GONE) {
             errorLayout.setVisibility(View.VISIBLE);

@@ -7,7 +7,7 @@
          app:showAsAction="always"
          />
      <item android:id="@+id/view_web"
-         android:title="add to favorite"
+         android:title="open news web"
          app:showAsAction="never"
          />
 
