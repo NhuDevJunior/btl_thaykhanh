@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+
 import androidx.core.util.Pair;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -44,20 +45,20 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     private RecyclerView rvArticles;
     private RecyclerView.LayoutManager layoutManager;
     private List<Article> articles = new ArrayList<>();
     private List<Article> search_articles = new ArrayList<>();
     private ArticlesAdapter adapter;
-    private final String apikey="210699";
+    private final String apikey = "210699";
     ProgressBar firstPro;
     ArrayList<Contact> contacts;
     private RelativeLayout errorLayout;
     private ImageView errorImage;
-    private TextView errorTitle,errorMessage;
+    private TextView errorTitle, errorMessage;
     private Button btnRetry;
-    private String TAG=MainActivity.class.getSimpleName();
+    private String TAG = MainActivity.class.getSimpleName();
     private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
@@ -76,29 +77,26 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         onLoadingSwipeRefresh("");
 
     }
-    public void LoadJson(final String keyword){
+
+    public void LoadJson(final String keyword) {
         errorLayout.setVisibility(View.GONE);
         swipeRefreshLayout.setRefreshing(true);
         ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-        Call<News> call ;
-        if(!keyword.equals(""))
-        {
+        Call<News> call;
+        if (!keyword.equals("")) {
 //            call = apiInterface.getSearchNews(apikey,keyword);
             call = apiInterface.getNews(apikey);
-        }
-        else {
+        } else {
             call = apiInterface.getNews(apikey);
         }
         call.enqueue(new Callback<News>() {
             @Override
             public void onResponse(Call<News> call, Response<News> response) {
-                if (response.isSuccessful()&&response.body().getArticles()!=null)
-                {
-                    if(!articles.isEmpty()){
+                if (response.isSuccessful() && response.body().getArticles() != null) {
+                    if (!articles.isEmpty()) {
                         articles.clear();
                     }
-                    if(!search_articles.isEmpty())
-                    {
+                    if (!search_articles.isEmpty()) {
                         search_articles.clear();
                     }
                     articles = response.body().getArticles();
@@ -107,24 +105,20 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                         rvArticles = (RecyclerView) findViewById(R.id.recyclerView);
 //                        firstPro = findViewById(R.id.first_pro);
 //                      contacts = Contact.createContactsList(20);
-                        if (!keyword.equals(""))
-                        {
-                            for(int i=0;i<articles.size();i++)
-                            {
-                                if(articles.get(i).getTitle().toLowerCase().indexOf(keyword.toLowerCase())!=-1)
-                                {
+                        if (!keyword.equals("")) {
+                            for (int i = 0; i < articles.size(); i++) {
+                                if (articles.get(i).getTitle().toLowerCase().indexOf(keyword.toLowerCase()) != -1) {
                                     search_articles.add(articles.get(i));
                                 }
                             }
-                            adapter = new ArticlesAdapter(search_articles,MainActivity.this);
+                            adapter = new ArticlesAdapter(search_articles, MainActivity.this);
                             rvArticles.setAdapter(adapter);
                             rvArticles.setLayoutManager(new LinearLayoutManager(MainActivity.this));
                             firstPro.setVisibility(View.GONE);
                             swipeRefreshLayout.setRefreshing(false);
                             initListener();
 
-                        }
-                        else {
+                        } else {
                             adapter = new ArticlesAdapter(articles, MainActivity.this);
                             rvArticles.setAdapter(adapter);
                             rvArticles.setLayoutManager(new LinearLayoutManager(MainActivity.this));
@@ -132,19 +126,16 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                             swipeRefreshLayout.setRefreshing(false);
                             initListener();
                         }
-                    }catch (Exception e)
-                    {
-                        Log.d(TAG, "onResponse: "+e);
+                    } catch (Exception e) {
+                        Log.d(TAG, "onResponse: " + e);
                     }
-                    Toast.makeText(MainActivity.this,"yes Result: "+articles.size(),Toast.LENGTH_SHORT).show();
-                }else
-                {
-                    Toast.makeText(MainActivity.this,"No Result",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "yes Result: " + articles.size(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(MainActivity.this, "No Result", Toast.LENGTH_SHORT).show();
                     firstPro.setVisibility(View.GONE);
                     swipeRefreshLayout.setRefreshing(false);
                     String errorCode;
-                    switch (response.code())
-                    {
+                    switch (response.code()) {
                         case 404:
                             errorCode = "404 not found";
                             break;
@@ -156,55 +147,55 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                             break;
                     }
                     showErrorMessage(
-                            R.drawable.no_result,"No Result","Please Try again!\n"+errorCode
+                            R.drawable.no_result, "No Result", "Please Try again!\n" + errorCode
                     );
                 }
             }
 
             @Override
             public void onFailure(Call<News> call, Throwable t) {
-                Toast.makeText(MainActivity.this,"Loi o day",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Loi o day", Toast.LENGTH_SHORT).show();
                 firstPro.setVisibility(View.INVISIBLE);
                 Log.e("YOUR_APP_LOG_TAG", "I got an error", t);
                 swipeRefreshLayout.setRefreshing(false);
                 showErrorMessage(
-                        R.drawable.no_result,"No Result","Please Try again!\n"+t.toString()
+                        R.drawable.no_result, "No Result", "Please Try again!\n" + t.toString()
                 );
             }
         });
 
     }
-    private void initListener(){
-         adapter.setOnItemClickListener(new ArticlesAdapter.OnItemClickListener() {
-             @Override
-             public void onItemClick(View view, int position) {
-                 ImageView imageView = view.findViewById(R.id.img);
-                 Intent intent = new Intent(MainActivity.this,NewsDetailActivity.class);
-                 Article article = articles.get(position);
-                 intent.putExtra("url",article.getUrl());
-                 intent.putExtra("title",article.getTitle());
-                 intent.putExtra("img",article.getUrlToImage());
-                 intent.putExtra("date",article.getPublishedAt());
-                 intent.putExtra("source",article.getSource().getName());
-                 intent.putExtra("author",article.getAuthor());
-                 intent.putExtra("content",article.getContent());
-                 Pair<View,String> pair = Pair.create((View)imageView, ViewCompat.getTransitionName(imageView));
-                 ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                         MainActivity.this,pair);
-                 if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.JELLY_BEAN)
-                 {
-                     startActivity(intent,optionsCompat.toBundle());
-                 }
-                 else {
-                     startActivity(intent);
-                 }
-             }
-         });
+
+    private void initListener() {
+        adapter.setOnItemClickListener(new ArticlesAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                ImageView imageView = view.findViewById(R.id.img);
+                Intent intent = new Intent(MainActivity.this, NewsDetailActivity.class);
+                Article article = articles.get(position);
+                intent.putExtra("url", article.getUrl());
+                intent.putExtra("title", article.getTitle());
+                intent.putExtra("img", article.getUrlToImage());
+                intent.putExtra("date", article.getPublishedAt());
+                intent.putExtra("source", article.getSource().getName());
+                intent.putExtra("author", article.getAuthor());
+                intent.putExtra("content", article.getContent());
+                Pair<View, String> pair = Pair.create((View) imageView, ViewCompat.getTransitionName(imageView));
+                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        MainActivity.this, pair);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    startActivity(intent, optionsCompat.toBundle());
+                } else {
+                    startActivity(intent);
+                }
+            }
+        });
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main,menu);
+        inflater.inflate(R.menu.menu_main, menu);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         MenuItem searchMenuItem = menu.findItem(R.id.action_search);
         MenuItem favoriteMenuItem = menu.findItem(R.id.action_login);
@@ -214,9 +205,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if(query.length()>2)
-                {
-                   onLoadingSwipeRefresh(query);
+                if (query.length() > 2) {
+                    onLoadingSwipeRefresh(query);
                 }
                 return false;
             }
@@ -227,23 +217,24 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 return false;
             }
         });
-        searchMenuItem.getIcon().setVisible(false,false);
+        searchMenuItem.getIcon().setVisible(false, false);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.action_login)
-        {
-            startActivity(new Intent(MainActivity.this,LoginFacbookActivity.class));
+        if (id == R.id.action_login) {
+            startActivity(new Intent(MainActivity.this, LoginFacbookActivity.class));
+        }
+        if (id == R.id.weather) {
+            startActivity(new Intent(MainActivity.this, WheatherActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void showErrorMessage(int imageView, String title, String message)
-    {
-        if(errorLayout.getVisibility()==View.GONE) {
+    private void showErrorMessage(int imageView, String title, String message) {
+        if (errorLayout.getVisibility() == View.GONE) {
             errorLayout.setVisibility(View.VISIBLE);
         }
         errorImage.setImageResource(imageView);
@@ -252,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         btnRetry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-           onLoadingSwipeRefresh("");
+                onLoadingSwipeRefresh("");
             }
         });
     }
@@ -261,8 +252,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     public void onRefresh() {
         onLoadingSwipeRefresh("");
     }
-    private void onLoadingSwipeRefresh(final String keyword)
-    {
+
+    private void onLoadingSwipeRefresh(final String keyword) {
         swipeRefreshLayout.post(
                 new Runnable() {
                     @Override

@@ -10,8 +10,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Nhu">
-        <activity android:name=".LoginFacbookActivity"></activity>
+        android:theme="@style/Theme.Nhu"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".WheatherActivity"></activity>
+        <activity android:name=".LoginFacbookActivity" />
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
