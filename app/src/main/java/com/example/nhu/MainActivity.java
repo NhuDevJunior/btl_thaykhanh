@@ -22,7 +22,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -35,7 +34,6 @@ import com.example.nhu.adapter.ArticlesAdapter;
 import com.example.nhu.api.ApiClient;
 import com.example.nhu.api.ApiInterface;
 import com.example.nhu.models.Article;
-import com.example.nhu.models.Contact;
 import com.example.nhu.models.News;
 
 import java.util.ArrayList;
@@ -53,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private ArticlesAdapter adapter;
     private final String apikey = "210699";
     ProgressBar firstPro;
-    ArrayList<Contact> contacts;
     private RelativeLayout errorLayout;
     private ImageView errorImage;
     private TextView errorTitle, errorMessage;
@@ -129,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     } catch (Exception e) {
                         Log.d(TAG, "onResponse: " + e);
                     }
-                    Toast.makeText(MainActivity.this, "yes Result: " + articles.size(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "yes Result: " + search_articles.size(), Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(MainActivity.this, "No Result", Toast.LENGTH_SHORT).show();
                     firstPro.setVisibility(View.GONE);
