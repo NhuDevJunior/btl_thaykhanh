@@ -14,6 +14,7 @@
         android:usesCleartextTraffic="true">
         <activity android:name=".WheatherActivity"></activity>
         <activity android:name=".LoginFacbookActivity" />
+        <activity android:name=".CovidActivity"/>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

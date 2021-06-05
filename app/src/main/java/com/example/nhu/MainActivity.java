@@ -224,6 +224,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         if (id == R.id.action_login) {
             startActivity(new Intent(MainActivity.this, LoginFacbookActivity.class));
         }
+        if (id == R.id.covid) {
+            startActivity(new Intent(MainActivity.this, CovidActivity.class));
+        }
         if (id == R.id.weather) {
             startActivity(new Intent(MainActivity.this, WheatherActivity.class));
         }
