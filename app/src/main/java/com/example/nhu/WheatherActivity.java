@@ -38,6 +38,7 @@ public class WheatherActivity extends AppCompatActivity {
         setContentView(R.layout.activity_wheather);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Weather");
         city = findViewById(R.id.city);
         country = findViewById(R.id.country);
         result = findViewById(R.id.tvResult);

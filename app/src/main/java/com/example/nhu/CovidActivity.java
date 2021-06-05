@@ -44,7 +44,9 @@ public class CovidActivity extends AppCompatActivity {
         tvTotalDeaths = findViewById(R.id.tvTotalDeaths);
         tvTodayDeaths = findViewById(R.id.tvTodayDeaths);
         tvPopulation = findViewById(R.id.tvPopulation);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Covid");
         Calendar calendar = Calendar.getInstance();
         String curentDate = DateFormat.getDateInstance(DateFormat.LONG).format(calendar.getTime());
         TextView textViewDate = findViewById(R.id.date);
@@ -139,4 +141,5 @@ public class CovidActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }
